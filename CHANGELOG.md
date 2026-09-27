@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.0.3](https://github.com/ahincho/nova-java-12-spring-boot-starter/compare/v1.0.2...v1.0.3) (2026-09-27)
+
+
+### Documentation
+
+* add a README and adopt EPL-2.0 ([d16917d](https://github.com/ahincho/nova-java-12-spring-boot-starter/commit/d16917df4e61d06655d84a218cd4d67752def762))
+
 ## [1.0.2](https://github.com/ahincho/nova-java-spring-boot-starter/compare/v1.0.1...v1.0.2) (2026-07-13)
 
 
