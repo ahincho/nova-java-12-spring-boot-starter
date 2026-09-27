@@ -69,7 +69,7 @@ val jqwikVersion = "1.9.3"
 
 dependencies {
     // BOM — centralizes versions for Spring Boot and internal libs
-    api(platform("pe.edu.nova.java:nova-spring-boot-bom:1.0.0"))
+    api(platform("pe.edu.nova.java:nova-spring-boot-bom:2.0.0"))
 
     // Spring Boot starters (version from BOM)
     api("org.springframework.boot:spring-boot-starter")
@@ -82,8 +82,8 @@ dependencies {
     api("pe.edu.nova.java.libs:nova-mapper-utils")
 
     // Internal Nova Platform starters (version from BOM)
-    api("pe.edu.nova.java.starters:nova-mask-starter")
-    api("pe.edu.nova.java.starters:nova-api-standard-starter")
+    api("pe.edu.nova.java.starters:nova-mask-spring-boot-starter")
+    api("pe.edu.nova.java.starters:nova-api-standard-spring-boot-starter")
 
     // Test
     testImplementation("org.junit.jupiter:junit-jupiter:$junitVersion")
@@ -111,12 +111,41 @@ checkstyle {
     sourceSets = listOf(project.sourceSets.main.get())
 }
 
+// Versiones parcheadas de dependencias que el OWASP gate marca con CVSS >= 7. Las cuatro
+// llegan por la herramienta checkstyle; son las mismas que usan los demás starters.
+// Verificadas contra la GitHub Advisory Database el 2026-09-27.
+configurations.all {
+    resolutionStrategy.eachDependency {
+        if (requested.group == "org.apache.httpcomponents" && requested.name.startsWith("httpcore")) {
+            useVersion("4.4.16")
+            because("CVE-2026-54428, CVE-2026-54399 require httpcore 4.4.16+")
+        }
+        if (requested.group == "org.apache.httpcomponents.core5" && requested.name.startsWith("httpcore5")) {
+            useVersion("5.4.3")
+            because("CVE-2026-54399 requires httpcore5 5.4.3+")
+        }
+        if (requested.group == "commons-beanutils" && requested.name == "commons-beanutils") {
+            useVersion("1.11.0")
+            because("CVE-2025-48734 requires commons-beanutils 1.11.0+")
+        }
+        if (requested.group == "org.codehaus.plexus" && requested.name == "plexus-utils") {
+            useVersion("3.6.1")
+            because("CVE-2025-67030 requires plexus-utils 3.6.1+")
+        }
+    }
+}
+
 dependencyCheck {
     // NVD_API_KEY / NOVA_OWASP_FAIL_ON_CVSS are injected by reusable-owasp-check.yml.
     // Locally (no env vars set) this defaults to "never fail" (11.0, matches plugin default)
     // and an empty NVD key (slower updates, acceptable for local dev).
     failBuildOnCVSS = (System.getenv("NOVA_OWASP_FAIL_ON_CVSS") ?: "11").toFloat()
     nvd.apiKey = System.getenv("NVD_API_KEY") ?: ""
+    // reusable-owasp-check.yml restaura un mirror de NVD de menos de 24 horas. Sin estas
+    // dos líneas el plugin lo ignora, sincroniza NVD entero y puede quedarse sin memoria.
+    autoUpdate = false
+    data.directory = System.getenv("NOVA_OWASP_DATA_DIR")
+        ?: "${System.getProperty("user.home")}/.dependency-check-data"
 }
 
 publishing {
