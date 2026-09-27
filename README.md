@@ -11,8 +11,8 @@ masking, dates and mapping in place instead of assembling them.
 |---|---|
 | `spring-boot-starter` | `nova-date-utils` |
 | `spring-boot-starter-webmvc` | `nova-mapper-utils` |
-| `spring-boot-starter-jackson` | `nova-mask-starter` |
-| `spring-boot-starter-actuator` | `nova-api-standard-starter` |
+| `spring-boot-starter-jackson` | `nova-mask-spring-boot-starter` |
+| `spring-boot-starter-actuator` | `nova-api-standard-spring-boot-starter` |
 
 Versions come from `nova-spring-boot-bom`, so an application declares none
 of them.

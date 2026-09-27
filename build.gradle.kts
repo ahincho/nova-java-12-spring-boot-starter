@@ -69,7 +69,7 @@ val jqwikVersion = "1.9.3"
 
 dependencies {
     // BOM — centralizes versions for Spring Boot and internal libs
-    api(platform("pe.edu.nova.java:nova-spring-boot-bom:1.0.0"))
+    api(platform("pe.edu.nova.java:nova-spring-boot-bom:2.0.0"))
 
     // Spring Boot starters (version from BOM)
     api("org.springframework.boot:spring-boot-starter")
@@ -82,8 +82,8 @@ dependencies {
     api("pe.edu.nova.java.libs:nova-mapper-utils")
 
     // Internal Nova Platform starters (version from BOM)
-    api("pe.edu.nova.java.starters:nova-mask-starter")
-    api("pe.edu.nova.java.starters:nova-api-standard-starter")
+    api("pe.edu.nova.java.starters:nova-mask-spring-boot-starter")
+    api("pe.edu.nova.java.starters:nova-api-standard-spring-boot-starter")
 
     // Test
     testImplementation("org.junit.jupiter:junit-jupiter:$junitVersion")
