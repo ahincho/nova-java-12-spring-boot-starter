@@ -34,7 +34,7 @@ authenticated with a token that has `read:packages`.
 ```kotlin
 repositories {
     maven {
-        url = uri("https://maven.pkg.github.com/ahincho/nova-java-spring-boot-starter")
+        url = uri("https://maven.pkg.github.com/ahincho/nova-java-12-spring-boot-starter")
         credentials {
             username = providers.gradleProperty("gpr.user").orNull ?: System.getenv("GITHUB_ACTOR")
             password = providers.gradleProperty("gpr.key").orNull ?: System.getenv("GITHUB_TOKEN")
@@ -66,15 +66,15 @@ the platform wraps them in `ApiResponse<T>`; thrown exceptions become
 
 Observability is a separate dependency on purpose — not every service
 wants an OTLP exporter. Add
-[nova-java-observability-spring-boot-starter](https://github.com/ahincho/nova-java-observability-spring-boot-starter)
+[nova-java-observability-spring-boot-starter](https://github.com/ahincho/nova-java-09-observability-spring-boot-starter)
 when it does.
 
 ## Starting from scratch
 
 Rather than adding this to an empty project, generate one:
 
-- [nova-java-spring-boot-archetype](https://github.com/ahincho/nova-java-spring-boot-archetype) — Maven
-- [nova-java-spring-boot-gradle-plugin](https://github.com/ahincho/nova-java-spring-boot-gradle-plugin) — Gradle conventions
+- [nova-java-spring-boot-archetype](https://github.com/ahincho/nova-java-17-spring-boot-archetype) — Maven
+- [nova-java-spring-boot-gradle-plugin](https://github.com/ahincho/nova-java-16-spring-boot-gradle-plugin) — Gradle conventions
 
 ## Requirements
 

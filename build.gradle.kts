@@ -32,7 +32,7 @@ repositories {
     val readToken = System.getenv("NOVA_PACKAGES_READ_TOKEN") ?: System.getenv("GITHUB_TOKEN")
     maven {
         name = "NovaBom"
-        url = uri("https://maven.pkg.github.com/ahincho/nova-bom")
+        url = uri("https://maven.pkg.github.com/ahincho/nova-java-13-bom")
         credentials {
             username = System.getenv("GITHUB_ACTOR")
             password = readToken
@@ -40,7 +40,7 @@ repositories {
     }
     maven {
         name = "NovaDateUtils"
-        url = uri("https://maven.pkg.github.com/ahincho/nova-java-date-utils")
+        url = uri("https://maven.pkg.github.com/ahincho/nova-java-02-date-utils")
         credentials {
             username = System.getenv("GITHUB_ACTOR")
             password = readToken
@@ -48,7 +48,7 @@ repositories {
     }
     maven {
         name = "NovaMapperUtils"
-        url = uri("https://maven.pkg.github.com/ahincho/nova-java-mapper-utils")
+        url = uri("https://maven.pkg.github.com/ahincho/nova-java-03-mapper-utils")
         credentials {
             username = System.getenv("GITHUB_ACTOR")
             password = readToken
@@ -56,7 +56,7 @@ repositories {
     }
     maven {
         name = "NovaCommonsSpringBootStarter"
-        url = uri("https://maven.pkg.github.com/ahincho/nova-java-commons-spring-boot-starter")
+        url = uri("https://maven.pkg.github.com/ahincho/nova-java-08-commons-spring-boot-starter")
         credentials {
             username = System.getenv("GITHUB_ACTOR")
             password = readToken
@@ -128,7 +128,7 @@ publishing {
     repositories {
         maven {
             name = "GitHubPackages"
-            url = uri("https://maven.pkg.github.com/ahincho/nova-java-spring-boot-starter")
+            url = uri("https://maven.pkg.github.com/ahincho/nova-java-12-spring-boot-starter")
             credentials {
                 username = System.getenv("GITHUB_ACTOR")
                 password = System.getenv("GITHUB_TOKEN")
