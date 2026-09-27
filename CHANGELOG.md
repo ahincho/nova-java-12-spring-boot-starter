@@ -1,5 +1,13 @@
 # Changelog
 
+## [1.0.4](https://github.com/ahincho/nova-java-12-spring-boot-starter/compare/v1.0.3...v1.0.4) (2026-09-27)
+
+
+### Bug Fixes
+
+* **deps:** depend on the renamed starters through nova-spring-boot-bom 2.0.0 ([c20e720](https://github.com/ahincho/nova-java-12-spring-boot-starter/commit/c20e720140942076d74c57797bf182b323bc6d6c))
+* **deps:** depend on the renamed starters through nova-spring-boot-bom 2.0.0 ([d4f6758](https://github.com/ahincho/nova-java-12-spring-boot-starter/commit/d4f6758d9a6d344bc29cea87b32119188a501826))
+
 ## [1.0.3](https://github.com/ahincho/nova-java-12-spring-boot-starter/compare/v1.0.2...v1.0.3) (2026-09-27)
 
 
