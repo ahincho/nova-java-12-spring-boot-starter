@@ -3,8 +3,8 @@
 The meta-starter. One dependency brings in Spring Boot web, Jackson and
 Actuator, the framework-free Nova libraries, and every Nova starter that
 is safe to have without configuration — so a new service starts with the
-API contract, layered errors, masking, observability, secrets, dates and
-mapping in place instead of assembling them.
+API contract, layered errors, masking, observability, secrets, the CQRS
+buses, dates and mapping in place instead of assembling them.
 
 ## What it pulls in
 
@@ -16,6 +16,7 @@ mapping in place instead of assembling them.
 | `spring-boot-starter-actuator` | `nova-api-standard-spring-boot-starter` | 4.0.0 |
 | | `nova-observability-spring-boot-starter` | 3.0.0 |
 | | `nova-secrets-spring-boot-starter` | 1.2.0 |
+| | `nova-cqrs-spring-boot-starter` | 1.0.0 |
 
 **A starter is in only if it changes nothing until it is configured**
 ([ADR-052](https://github.com/ahincho/nova-shared-01-docs/blob/main/adrs/java/ADR-052-meta-extension-de-quarkus.md)).
@@ -23,7 +24,9 @@ That is why observability is in since its 3.0.0, which exports nothing
 until an OTLP endpoint is set, why secrets are in: without
 `nova.secrets.import` they read no store, and why masking is in since its
 4.0.0, which masks only what is annotated: until 3.0.1 it also masked by the
-name of the field, and the `name` of a product came out as `T***`.
+name of the field, and the `name` of a product came out as `T***`. CQRS is in
+since its 1.0.0 ([ADR-053](https://github.com/ahincho/nova-shared-01-docs/blob/main/adrs/shared/ADR-053-cqrs-con-command-bus-y-query-bus.md)):
+without a handler, the `CommandBus` and the `QueryBus` do nothing.
 `nova-idempotency-spring-boot-starter` stays out: it switches itself on and
 needs the table of its JDBC store. Declare it separately when a service needs it.
 
@@ -60,7 +63,7 @@ repositories {
 }
 
 dependencies {
-    implementation("pe.edu.nova.java.starters:nova-spring-boot-starter:3.0.0")
+    implementation("pe.edu.nova.java.starters:nova-spring-boot-starter:3.1.0")
 }
 ```
 
