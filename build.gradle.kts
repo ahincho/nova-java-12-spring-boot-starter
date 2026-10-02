@@ -102,7 +102,7 @@ val mapperUtilsVersion = "1.0.2"
 // Desde la 4.0.0 el starter de enmascaramiento solo enmascara lo que se anota. Hasta la 3.0.1 también
 // enmascaraba por el nombre del campo, y eso cambiaba las respuestas de todo servicio que lo traía.
 val commonsStartersVersion = "4.0.0"
-val observabilityStarterVersion = "3.0.0"
+val observabilityStarterVersion = "3.0.1"
 val secretsVersion = "1.2.0"
 // Entra con su 1.0.0, como pide ADR-053: sin un handler, los buses no hacen nada.
 val cqrsVersion = "1.0.0"
