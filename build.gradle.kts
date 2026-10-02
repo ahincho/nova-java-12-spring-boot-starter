@@ -91,7 +91,9 @@ val springBootVersion = "4.0.8"
 // importaba el BOM 2.0.0 y repartía los starters 2.x.
 val dateUtilsVersion = "1.0.2"
 val mapperUtilsVersion = "1.0.2"
-val commonsStartersVersion = "3.0.1"
+// Desde la 4.0.0 el starter de enmascaramiento solo enmascara lo que se anota. Hasta la 3.0.1 también
+// enmascaraba por el nombre del campo, y eso cambiaba las respuestas de todo servicio que lo traía.
+val commonsStartersVersion = "4.0.0"
 val observabilityStarterVersion = "3.0.0"
 val secretsVersion = "1.2.0"
 
@@ -138,6 +140,8 @@ dependencies {
     testImplementation("org.junit.platform:junit-platform-launcher:$junitVersion")
     testImplementation("net.jqwik:jqwik:$jqwikVersion")
     testImplementation("org.springframework.boot:spring-boot-starter-test")
+    // Las pruebas levantan un servicio con el meta-starter y le hacen peticiones con MockMvc.
+    testImplementation("org.springframework.boot:spring-boot-starter-webmvc-test")
 }
 
 tasks.test {

@@ -12,18 +12,20 @@ mapping in place instead of assembling them.
 |---|---|---|
 | `spring-boot-starter` | `nova-date-utils` | 1.0.2 |
 | `spring-boot-starter-webmvc` | `nova-mapper-utils` | 1.0.2 |
-| `spring-boot-starter-jackson` | `nova-mask-spring-boot-starter` | 3.0.1 |
-| `spring-boot-starter-actuator` | `nova-api-standard-spring-boot-starter` | 3.0.1 |
+| `spring-boot-starter-jackson` | `nova-mask-spring-boot-starter` | 4.0.0 |
+| `spring-boot-starter-actuator` | `nova-api-standard-spring-boot-starter` | 4.0.0 |
 | | `nova-observability-spring-boot-starter` | 3.0.0 |
 | | `nova-secrets-spring-boot-starter` | 1.2.0 |
 
 **A starter is in only if it changes nothing until it is configured**
 ([ADR-052](https://github.com/ahincho/nova-shared-01-docs/blob/main/adrs/java/ADR-052-meta-extension-de-quarkus.md)).
 That is why observability is in since its 3.0.0, which exports nothing
-until an OTLP endpoint is set, and why secrets are in: without
-`nova.secrets.import` they read no store. `nova-idempotency-spring-boot-starter`
-stays out: it switches itself on and needs the table of its JDBC store.
-Declare it separately when a service needs it.
+until an OTLP endpoint is set, why secrets are in: without
+`nova.secrets.import` they read no store, and why masking is in since its
+4.0.0, which masks only what is annotated: until 3.0.1 it also masked by the
+name of the field, and the `name` of a product came out as `T***`.
+`nova-idempotency-spring-boot-starter` stays out: it switches itself on and
+needs the table of its JDBC store. Declare it separately when a service needs it.
 
 **The versions are written in this build, not taken from
 `nova-spring-boot-bom`.** The BOM manages this artifact, so importing the
@@ -36,10 +38,10 @@ artifact too.
 
 | Class | Does |
 |---|---|
-| `@NovaSpringBootApplication` | Replaces `@SpringBootApplication`, adding the Nova component scan |
-| `NovaApplication` | `run(...)` entry point |
-| `NovaAutoConfiguration` | Registers the platform beans |
-| `NovaEnvironmentPostProcessor` | Applies the platform's property defaults before the context starts |
+| `@NovaSpringBootApplication` | The annotation of the bootstrap class. It is `@SpringBootApplication` under a Nova name and adds nothing of its own: the component scan covers the package of the annotated class, and the Nova starters join through auto-configuration, not through a scan |
+| `NovaApplication` | `run(...)`: `SpringApplication.run` with no extra configuration |
+| `NovaAutoConfiguration` | A placeholder: it registers no beans yet |
+| `NovaEnvironmentPostProcessor` | At startup it checks that the JVM is Java 25 or later and Spring Boot is 4.x, and stops the startup naming the version it found if not. When both are right it logs `[Nova Platform] Validación exitosa — Java: 25, Spring Boot: 4.0.8` once. It sets no property |
 
 ## Install
 
@@ -58,13 +60,14 @@ repositories {
 }
 
 dependencies {
-    implementation("pe.edu.nova.java.starters:nova-spring-boot-starter:2.0.0")
+    implementation("pe.edu.nova.java.starters:nova-spring-boot-starter:3.0.0")
 }
 ```
 
 ## Use
 
 ```java
+import pe.edu.nova.java.starters.boot.NovaApplication;
 import pe.edu.nova.java.starters.boot.NovaSpringBootApplication;
 
 @NovaSpringBootApplication
@@ -78,7 +81,14 @@ public class Application {
 That is the whole bootstrap. Controllers can return domain objects and
 the platform wraps them in `ApiResponse<T>`; thrown errors are answered
 by layer, with the catalog code and `metadata.traceId`; annotated fields
-are masked in logs.
+are masked in the JSON the service answers.
+
+Masking only reaches what the code marks: `@Masked` on a field, or `@MaskedClass`
+on a class. A `name` or an `email` without annotation is answered as is. A service
+that wants masking by the name of the field, for every object, turns it on with
+`nova.mask.infer-by-field-name: true`, and `nova.mask.enabled: false` turns the
+masking off. The rules and the list of names are in the
+[mask starter](https://github.com/ahincho/nova-java-08-commons-spring-boot-starter#what-you-get).
 
 To export telemetry, set the collector:
 
@@ -91,6 +101,26 @@ nova:
 
 or `OTEL_EXPORTER_OTLP_ENDPOINT` in the environment. Without it, metrics,
 traces and log correlation still work inside the service; nothing leaves it.
+
+## Migrating to 3.0.0
+
+The 3.0.0 meta-starter brings the mask and API standard starters at 4.0.0. The mask
+starter stopped masking by the name of the field: until 3.0.1 every `String` called
+`name`, `email`, `phone`, `dni`, `card`, `account`, `ip` or a few other names came out
+masked in every response, annotated or not, so the `name` of a product was answered
+as `T***`.
+
+| Before (2.x) | From 3.0.0 | What to do |
+|---|---|---|
+| a `name`, `email`, `phone`... without annotation came out masked in every response | it is answered as is; only `@Masked` fields and `@MaskedClass` classes are masked | mark the fields that are personal data, or turn the old behaviour on with `nova.mask.infer-by-field-name: true` |
+| a test asserted a masked value such as `T***` | the value comes in the clear | assert the value, or mark the field |
+| `nova.mask.enabled=false` made the service fail to start | it turns the masking off | nothing |
+| the line `[Nova Platform] Validación exitosa` never reached the log | it is written once at startup | nothing |
+| `new NovaEnvironmentPostProcessor()` | `new NovaEnvironmentPostProcessor(DeferredLogFactory)` | let Spring Boot create it |
+
+The two ways out of the implicit masking, marking the fields or turning the property
+on, are described in [«Migrating to 4.0.0»](https://github.com/ahincho/nova-java-08-commons-spring-boot-starter#migrating-to-400)
+of the mask starter. The API standard starter changes nothing in 4.0.0.
 
 ## Migrating to 2.0.0
 
@@ -108,8 +138,10 @@ that are now included.
 ## Starting from scratch
 
 Rather than adding this to an empty project, start from a service
-template ([ADR-051](https://github.com/ahincho/nova-shared-01-docs/blob/main/adrs/shared/ADR-051-plantillas-de-servicio.md)),
-once `nova-template-01-spring-boot-service` is published.
+template ([ADR-051](https://github.com/ahincho/nova-shared-01-docs/blob/main/adrs/shared/ADR-051-plantillas-de-servicio.md)):
+[nova-template-01-spring-boot-service](https://github.com/ahincho/nova-template-01-spring-boot-service)
+is a minimal, real service that depends on this meta-starter, passes its tests and builds its
+container image.
 
 ## Requirements
 
