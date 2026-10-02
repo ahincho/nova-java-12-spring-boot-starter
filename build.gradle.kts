@@ -194,6 +194,15 @@ dependencyCheck {
     autoUpdate = false
     data.directory = System.getenv("NOVA_OWASP_DATA_DIR")
         ?: "${System.getProperty("user.home")}/.dependency-check-data"
+    // Los falsos positivos documentados en docs/owasp-suppressions.json de
+    // nova-shared-02-pipelines, activados por la variable NOVA_OWASP_CVE_SUPPRESSIONS del
+    // repositorio. reusable-owasp-check.yml genera el XML y deja su ruta en esta variable; sin
+    // ella no se suprime nada.
+    System.getenv("NOVA_OWASP_SUPPRESSIONS_FILE")?.let { path ->
+        if (File(path).exists()) {
+            suppressionFiles.add(path)
+        }
+    }
 }
 
 publishing {
