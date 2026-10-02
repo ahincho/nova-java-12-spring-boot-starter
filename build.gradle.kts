@@ -109,6 +109,10 @@ dependencies {
         api("org.apache.tomcat.embed:tomcat-embed-el:11.0.26") {
             because("Same CVEs in 11.0.24")
         }
+        // Llega con el exportador OTLP del starter de observabilidad, como en ese starter.
+        api("org.jetbrains.kotlin:kotlin-stdlib:2.4.0") {
+            because("CVE-2026-53914 CRITICAL 9.8 requires 2.4.0+")
+        }
     }
 
     // Spring Boot, con las versiones de su propio BOM
