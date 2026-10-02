@@ -78,6 +78,14 @@ repositories {
             password = readToken
         }
     }
+    maven {
+        name = "NovaCqrs"
+        url = uri("https://maven.pkg.github.com/ahincho/nova-java-27-cqrs")
+        credentials {
+            username = System.getenv("GITHUB_ACTOR")
+            password = readToken
+        }
+    }
 }
 
 val junitVersion = "6.0.3"
@@ -96,6 +104,8 @@ val mapperUtilsVersion = "1.0.2"
 val commonsStartersVersion = "4.0.0"
 val observabilityStarterVersion = "3.0.0"
 val secretsVersion = "1.2.0"
+// Entra con su 1.0.0, como pide ADR-053: sin un handler, los buses no hacen nada.
+val cqrsVersion = "1.0.0"
 
 dependencies {
     // Sin el BOM de Nova, los parches de seguridad que él fija viajan con el meta-starter:
@@ -134,6 +144,7 @@ dependencies {
     api("pe.edu.nova.java.starters:nova-api-standard-spring-boot-starter:$commonsStartersVersion")
     api("pe.edu.nova.java.starters:nova-observability-spring-boot-starter:$observabilityStarterVersion")
     api("pe.edu.nova.java.starters:nova-secrets-spring-boot-starter:$secretsVersion")
+    api("pe.edu.nova.java.starters:nova-cqrs-spring-boot-starter:$cqrsVersion")
 
     // Test
     testImplementation("org.junit.jupiter:junit-jupiter:$junitVersion")

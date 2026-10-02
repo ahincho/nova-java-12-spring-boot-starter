@@ -23,6 +23,8 @@ class MetaStarterClasspathTest {
                 + " pe.edu.nova.java.starters.observability.config.NovaObservabilityEnvironmentPostProcessor",
         "the secret store imports, pe.edu.nova.java.libs.secrets.SecretImports",
         "the secrets starter, pe.edu.nova.java.starters.secrets.NovaSecretsEnvironmentPostProcessor",
+        "the CQRS buses of ADR-053, pe.edu.nova.java.libs.cqrs.CommandBus",
+        "the CQRS starter, pe.edu.nova.java.starters.cqrs.NovaCqrsAutoConfiguration",
     })
     void bringsInWhatAServiceExpects(String what, String className) {
         assertDoesNotThrow(() -> Class.forName(className), what + " is missing from the classpath");
