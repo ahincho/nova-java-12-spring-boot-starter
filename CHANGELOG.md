@@ -1,5 +1,26 @@
 # Changelog
 
+## [3.0.0](https://github.com/ahincho/nova-java-12-spring-boot-starter/compare/v2.0.0...v3.0.0) (2026-10-02)
+
+
+### ⚠ BREAKING CHANGES
+
+* a service that uses the meta-starter no longer gets a field masked just for being called name, email, phone, dni, card, account, ip or one of the other names on the inference list. Mark the fields that are personal data with @Masked or @MaskedClass, or set nova.mask.infer-by-field-name=true to keep the previous behavior.
+
+### Features
+
+* take the commons starters 4.0.0, which mask only what is annotated ([c1a0f34](https://github.com/ahincho/nova-java-12-spring-boot-starter/commit/c1a0f34f83964da37a71f269ad9161986bfdf09c))
+
+
+### Bug Fixes
+
+* register the startup validation with the Spring Boot 4 key and a deferred log ([600f2f6](https://github.com/ahincho/nova-java-12-spring-boot-starter/commit/600f2f68672fdc47c129ad21c359b04e2ba2afe8))
+
+
+### Documentation
+
+* describe what the annotation, the auto-configuration and the post-processor do ([76a356c](https://github.com/ahincho/nova-java-12-spring-boot-starter/commit/76a356cf2daa143f87421cb47967f9880fe7a3b7))
+
 ## [2.0.0](https://github.com/ahincho/nova-java-12-spring-boot-starter/compare/v1.0.4...v2.0.0) (2026-10-02)
 
 
