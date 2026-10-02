@@ -1,2 +1,2 @@
-org.springframework.boot.env.EnvironmentPostProcessor=\
-  pe.edu.nova.java.starters.boot.env.NovaEnvironmentPostProcessor
+org.springframework.boot.EnvironmentPostProcessor=\
+pe.edu.nova.java.starters.boot.env.NovaEnvironmentPostProcessor

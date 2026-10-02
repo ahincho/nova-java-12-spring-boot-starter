@@ -1,10 +1,10 @@
 package pe.edu.nova.java.starters.boot.env;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.apache.commons.logging.Log;
+import org.springframework.boot.EnvironmentPostProcessor;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.SpringBootVersion;
-import org.springframework.boot.env.EnvironmentPostProcessor;
+import org.springframework.boot.logging.DeferredLogFactory;
 import org.springframework.core.env.ConfigurableEnvironment;
 
 /**
@@ -25,21 +25,28 @@ import org.springframework.core.env.ConfigurableEnvironment;
  * Cuando ambas validaciones son exitosas, se registra un mensaje informativo
  * con las versiones detectadas.</p>
  *
+ * <p>Spring Boot 4 lo encuentra por la clave {@code org.springframework.boot.EnvironmentPostProcessor}
+ * de {@code META-INF/spring.factories}. La clave de Spring Boot 3,
+ * {@code org.springframework.boot.env.EnvironmentPostProcessor}, está deprecada para retirarse. El
+ * mensaje se escribe con un log diferido, porque cuando corre este post-procesador el sistema de
+ * logging todavía no está listo y un log directo se pierde.</p>
+ *
  * @author Nova Platform
  * @version 1.0.0
  */
 public class NovaEnvironmentPostProcessor implements EnvironmentPostProcessor {
 
-    private static final Logger logger = LoggerFactory.getLogger(NovaEnvironmentPostProcessor.class);
+    private final Log log;
 
     /**
      * Crea una nueva instancia del post-procesador de entorno.
      *
-     * <p>Este constructor es invocado automáticamente por el mecanismo de
-     * carga de Spring Boot a través de {@code spring.factories}.</p>
+     * <p>Spring Boot lo invoca al leer {@code spring.factories} y le pasa el log diferido.</p>
+     *
+     * @param logFactory el log diferido, porque el sistema de logging todavía no está listo
      */
-    public NovaEnvironmentPostProcessor() {
-        // Constructor por defecto requerido por Spring Boot
+    public NovaEnvironmentPostProcessor(DeferredLogFactory logFactory) {
+        this.log = logFactory.getLog(NovaEnvironmentPostProcessor.class);
     }
 
     /** Versión mínima requerida de Java. */
@@ -65,7 +72,7 @@ public class NovaEnvironmentPostProcessor implements EnvironmentPostProcessor {
         validarVersionJava(versionJava);
         String versionSpringBoot = SpringBootVersion.getVersion();
         validarVersionSpringBoot(versionSpringBoot);
-        logger.info("[Nova Platform] Validación exitosa — Java: {}, Spring Boot: {}", versionJava, versionSpringBoot);
+        log.info("[Nova Platform] Validación exitosa — Java: " + versionJava + ", Spring Boot: " + versionSpringBoot);
     }
 
     /**
