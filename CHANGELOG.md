@@ -1,5 +1,12 @@
 # Changelog
 
+## [3.1.0](https://github.com/ahincho/nova-java-12-spring-boot-starter/compare/v3.0.0...v3.1.0) (2026-10-02)
+
+
+### Features
+
+* bring the CQRS starter 1.0.0 ([7853de2](https://github.com/ahincho/nova-java-12-spring-boot-starter/commit/7853de27aad0477d8a7bc80de311c17938c20eff))
+
 ## [3.0.0](https://github.com/ahincho/nova-java-12-spring-boot-starter/compare/v2.0.0...v3.0.0) (2026-10-02)
 
 
