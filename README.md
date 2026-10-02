@@ -36,10 +36,10 @@ artifact too.
 
 | Class | Does |
 |---|---|
-| `@NovaSpringBootApplication` | Replaces `@SpringBootApplication`, adding the Nova component scan |
-| `NovaApplication` | `run(...)` entry point |
-| `NovaAutoConfiguration` | Registers the platform beans |
-| `NovaEnvironmentPostProcessor` | Applies the platform's property defaults before the context starts |
+| `@NovaSpringBootApplication` | The annotation of the bootstrap class. It is `@SpringBootApplication` under a Nova name and adds nothing of its own: the component scan covers the package of the annotated class, and the Nova starters join through auto-configuration, not through a scan |
+| `NovaApplication` | `run(...)`: `SpringApplication.run` with no extra configuration |
+| `NovaAutoConfiguration` | A placeholder: it registers no beans yet |
+| `NovaEnvironmentPostProcessor` | At startup it checks that the JVM is Java 25 or later and Spring Boot is 4.x, and stops the startup naming the version it found if not. When both are right it logs `[Nova Platform] Validación exitosa — Java: 25, Spring Boot: 4.0.8` once. It sets no property |
 
 ## Install
 
@@ -65,6 +65,7 @@ dependencies {
 ## Use
 
 ```java
+import pe.edu.nova.java.starters.boot.NovaApplication;
 import pe.edu.nova.java.starters.boot.NovaSpringBootApplication;
 
 @NovaSpringBootApplication
@@ -78,7 +79,7 @@ public class Application {
 That is the whole bootstrap. Controllers can return domain objects and
 the platform wraps them in `ApiResponse<T>`; thrown errors are answered
 by layer, with the catalog code and `metadata.traceId`; annotated fields
-are masked in logs.
+are masked in the JSON the service answers.
 
 To export telemetry, set the collector:
 
@@ -108,8 +109,10 @@ that are now included.
 ## Starting from scratch
 
 Rather than adding this to an empty project, start from a service
-template ([ADR-051](https://github.com/ahincho/nova-shared-01-docs/blob/main/adrs/shared/ADR-051-plantillas-de-servicio.md)),
-once `nova-template-01-spring-boot-service` is published.
+template ([ADR-051](https://github.com/ahincho/nova-shared-01-docs/blob/main/adrs/shared/ADR-051-plantillas-de-servicio.md)):
+[nova-template-01-spring-boot-service](https://github.com/ahincho/nova-template-01-spring-boot-service)
+is a minimal, real service that depends on this meta-starter, passes its tests and builds its
+container image.
 
 ## Requirements
 
