@@ -179,6 +179,13 @@ configurations.all {
     }
 }
 
+// El análisis de OWASP lee las configuraciones de otras tareas al ejecutarse, y con la
+// configuration cache encendida Gradle lo corta antes de analizar nada. Solo esta tarea queda
+// fuera de la caché; el build y las pruebas la siguen usando.
+tasks.named("dependencyCheckAnalyze") {
+    notCompatibleWithConfigurationCache("dependency-check lee Task.project al ejecutarse")
+}
+
 dependencyCheck {
     // NVD_API_KEY / NOVA_OWASP_FAIL_ON_CVSS are injected by reusable-owasp-check.yml.
     // Locally (no env vars set) this defaults to "never fail" (11.0, matches plugin default)
