@@ -1,5 +1,12 @@
 # Changelog
 
+## [3.1.1](https://github.com/ahincho/nova-java-12-spring-boot-starter/compare/v3.1.0...v3.1.1) (2026-10-02)
+
+
+### Bug Fixes
+
+* bring the observability starter 3.0.1 ([1ae0485](https://github.com/ahincho/nova-java-12-spring-boot-starter/commit/1ae04855134cdee3c5c53f93b11a81aa13b1bf76))
+
 ## [3.1.0](https://github.com/ahincho/nova-java-12-spring-boot-starter/compare/v3.0.0...v3.1.0) (2026-10-02)
 
 
