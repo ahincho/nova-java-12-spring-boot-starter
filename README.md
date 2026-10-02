@@ -14,7 +14,7 @@ buses, dates and mapping in place instead of assembling them.
 | `spring-boot-starter-webmvc` | `nova-mapper-utils` | 1.0.2 |
 | `spring-boot-starter-jackson` | `nova-mask-spring-boot-starter` | 4.0.0 |
 | `spring-boot-starter-actuator` | `nova-api-standard-spring-boot-starter` | 4.0.0 |
-| | `nova-observability-spring-boot-starter` | 3.0.0 |
+| | `nova-observability-spring-boot-starter` | 3.0.1 |
 | | `nova-secrets-spring-boot-starter` | 1.2.0 |
 | | `nova-cqrs-spring-boot-starter` | 1.0.0 |
 
@@ -63,7 +63,7 @@ repositories {
 }
 
 dependencies {
-    implementation("pe.edu.nova.java.starters:nova-spring-boot-starter:3.1.0")
+    implementation("pe.edu.nova.java.starters:nova-spring-boot-starter:3.1.1")
 }
 ```
 
