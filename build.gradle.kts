@@ -62,28 +62,76 @@ repositories {
             password = readToken
         }
     }
+    maven {
+        name = "NovaObservabilitySpringBootStarter"
+        url = uri("https://maven.pkg.github.com/ahincho/nova-java-09-observability-spring-boot-starter")
+        credentials {
+            username = System.getenv("GITHUB_ACTOR")
+            password = readToken
+        }
+    }
+    maven {
+        name = "NovaSecrets"
+        url = uri("https://maven.pkg.github.com/ahincho/nova-java-23-secrets")
+        credentials {
+            username = System.getenv("GITHUB_ACTOR")
+            password = readToken
+        }
+    }
 }
 
 val junitVersion = "6.0.3"
 val jqwikVersion = "1.9.3"
 
-dependencies {
-    // BOM — centralizes versions for Spring Boot and internal libs
-    api(platform("pe.edu.nova.java:nova-spring-boot-bom:2.0.0"))
+// La misma versión de Spring Boot que el resto de la plataforma.
+val springBootVersion = "4.0.8"
 
-    // Spring Boot starters (version from BOM)
+// Las versiones de Nova van escritas aquí y no salen de nova-spring-boot-bom (ADR-052). El BOM
+// gestiona a este meta-starter, así que importarlo lo dejaba siempre una versión atrás: la 1.0.4
+// importaba el BOM 2.0.0 y repartía los starters 2.x.
+val dateUtilsVersion = "1.0.2"
+val mapperUtilsVersion = "1.0.2"
+val commonsStartersVersion = "3.0.1"
+val observabilityStarterVersion = "3.0.0"
+val secretsVersion = "1.2.0"
+
+dependencies {
+    // Sin el BOM de Nova, los parches de seguridad que él fija viajan con el meta-starter:
+    // Spring Boot 4.0.8 trae Tomcat 11.0.24, que tiene CVE-2026-68525, CVE-2026-65905 y
+    // CVE-2026-65182, corregidas en la 11.0.25.
+    constraints {
+        api("org.apache.tomcat.embed:tomcat-embed-core:11.0.26") {
+            because("CVE-2026-68525, CVE-2026-65905, CVE-2026-65182 require 11.0.25+")
+        }
+        api("org.apache.tomcat.embed:tomcat-embed-websocket:11.0.26") {
+            because("Same CVEs in 11.0.24")
+        }
+        api("org.apache.tomcat.embed:tomcat-embed-el:11.0.26") {
+            because("Same CVEs in 11.0.24")
+        }
+        // Llega con el exportador OTLP del starter de observabilidad, como en ese starter.
+        api("org.jetbrains.kotlin:kotlin-stdlib:2.4.0") {
+            because("CVE-2026-53914 CRITICAL 9.8 requires 2.4.0+")
+        }
+    }
+
+    // Spring Boot, con las versiones de su propio BOM
+    api(platform("org.springframework.boot:spring-boot-dependencies:$springBootVersion"))
     api("org.springframework.boot:spring-boot-starter")
     api("org.springframework.boot:spring-boot-starter-webmvc")
     api("org.springframework.boot:spring-boot-starter-jackson")
     api("org.springframework.boot:spring-boot-starter-actuator")
 
-    // Internal Nova Platform libraries (version from BOM)
-    api("pe.edu.nova.java.libs:nova-date-utils")
-    api("pe.edu.nova.java.libs:nova-mapper-utils")
+    // Librerías puras de Nova
+    api("pe.edu.nova.java.libs:nova-date-utils:$dateUtilsVersion")
+    api("pe.edu.nova.java.libs:nova-mapper-utils:$mapperUtilsVersion")
 
-    // Internal Nova Platform starters (version from BOM)
-    api("pe.edu.nova.java.starters:nova-mask-spring-boot-starter")
-    api("pe.edu.nova.java.starters:nova-api-standard-spring-boot-starter")
+    // Los starters de Nova que, sin configuración, no cambian el comportamiento del servicio
+    // (ADR-052). La idempotencia queda fuera: se enciende sola y exige la tabla de su almacén.
+    api("pe.edu.nova.java.starters:nova-mask-spring-boot-starter:$commonsStartersVersion")
+    api("pe.edu.nova.java.starters:nova-api-standard-spring-boot-starter:$commonsStartersVersion")
+    api("pe.edu.nova.java.starters:nova-observability-spring-boot-starter:$observabilityStarterVersion")
+    api("pe.edu.nova.java.starters:nova-secrets-spring-boot-starter:$secretsVersion")
 
     // Test
     testImplementation("org.junit.jupiter:junit-jupiter:$junitVersion")
@@ -146,6 +194,15 @@ dependencyCheck {
     autoUpdate = false
     data.directory = System.getenv("NOVA_OWASP_DATA_DIR")
         ?: "${System.getProperty("user.home")}/.dependency-check-data"
+    // Los falsos positivos documentados en docs/owasp-suppressions.json de
+    // nova-shared-02-pipelines, activados por la variable NOVA_OWASP_CVE_SUPPRESSIONS del
+    // repositorio. reusable-owasp-check.yml genera el XML y deja su ruta en esta variable; sin
+    // ella no se suprime nada.
+    System.getenv("NOVA_OWASP_SUPPRESSIONS_FILE")?.let { path ->
+        if (File(path).exists()) {
+            suppressionFiles.add(path)
+        }
+    }
 }
 
 publishing {
