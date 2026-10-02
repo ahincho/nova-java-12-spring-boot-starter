@@ -1,5 +1,21 @@
 # Changelog
 
+## [2.0.0](https://github.com/ahincho/nova-java-12-spring-boot-starter/compare/v1.0.4...v2.0.0) (2026-10-02)
+
+
+### ⚠ BREAKING CHANGES
+
+* a service that used the meta-starter without nova-spring-boot-bom 3.x now receives the API standard and mask starters 3.0.1, with the layered errors of ADR-031, plus observability 3.0.0 and secrets 1.2.0.
+
+### Features
+
+* declare the starter versions and bring observability and secrets ([f4c3ef6](https://github.com/ahincho/nova-java-12-spring-boot-starter/commit/f4c3ef6db786732d86bf8f2b294f9ad8fa05c0ca))
+
+
+### Bug Fixes
+
+* **deps:** pin kotlin-stdlib 2.4.0 for CVE-2026-53914 ([8853e1b](https://github.com/ahincho/nova-java-12-spring-boot-starter/commit/8853e1b56dd7b5f6cad01c09c852aed4e6f66633))
+
 ## [1.0.4](https://github.com/ahincho/nova-java-12-spring-boot-starter/compare/v1.0.3...v1.0.4) (2026-09-27)
 
 
